@@ -10,14 +10,15 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
+#include "secrets.h"
+
 //WiFiMulti WiFiMulti;
 
-
-const int zone1Pin = 4;   //storefront
-const int zone2Pin = 5;   //main workshop
-const int zone3Pin = 14;  //upstairsA
-const int zone4Pin = 12;  //North room
-const int zone5Pin = 16;  //upstairsB
+const int zone1Pin = 4;   //D2 - storefront
+const int zone2Pin = 5;   //D1 - main workshop
+const int zone3Pin = 14;  //D5 - upstairsA
+const int zone4Pin = 12;  //D6 - North room
+const int zone5Pin = 16;  //D0 - upstairsB
 
 int zone1Status = 0;
 int zone2Status = 0;
@@ -40,7 +41,11 @@ Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO
 
 // Setup a feed called 'photocell' for publishing.
 // Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
-Adafruit_MQTT_Publish hackery_thermostats = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostats");
+Adafruit_MQTT_Publish hackery_thermostat_1 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostat_1");
+Adafruit_MQTT_Publish hackery_thermostat_2 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostat_2");
+Adafruit_MQTT_Publish hackery_thermostat_3 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostat_3");
+Adafruit_MQTT_Publish hackery_thermostat_4 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostat_4");
+Adafruit_MQTT_Publish hackery_thermostat_5 = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/heating/thermostat_5");
 
 // Setup a feed called 'onoff' for subscribing to changes.
 // Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/heating/onoff");
@@ -59,13 +64,13 @@ void setup()
   pinMode(zone3Pin, INPUT); 
   pinMode(zone4Pin, INPUT); 
   pinMode(zone5Pin, INPUT); 
-
+  /*
   digitalWrite(zone1Pin, LOW);  //disable all pullups
   digitalWrite(zone2Pin, LOW);
   digitalWrite(zone3Pin, LOW);
   digitalWrite(zone4Pin, LOW);
   digitalWrite(zone5Pin, LOW);
-  
+  */
   Serial.begin(115200);
   delay(5);
 
@@ -113,16 +118,51 @@ void loop()
   zone4Status = !(digitalRead(zone4Pin));
   zone5Status = !(digitalRead(zone5Pin));
   
-  // Now we can publish stuff!
-  Serial.print(F("\nSending hackery_thermostats val "));
-  Serial.print(x);
+  Serial.print(F("\nSending hackery_thermostat_1 val "));
+  Serial.print(zone1Status);
   Serial.print("...");
-  if (! hackery_thermostats.publish(x++)) {
+  if (! hackery_thermostat_1.publish(zone1Status)) {
     Serial.println(F("Failed"));
   } else {
     Serial.println(F("OK!"));
   }
 
+  Serial.print(F("\nSending hackery_thermostat_2 val "));
+  Serial.print(zone2Status);
+  Serial.print("...");
+  if (! hackery_thermostat_2.publish(zone2Status)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+
+  Serial.print(F("\nSending hackery_thermostat_3 val "));
+  Serial.print(zone3Status);
+  Serial.print("...");
+  if (! hackery_thermostat_3.publish(zone3Status)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+  
+  Serial.print(F("\nSending hackery_thermostat_4 val "));
+  Serial.print(zone4Status);
+  Serial.print("...");
+  if (! hackery_thermostat_4.publish(zone4Status)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }
+  
+  Serial.print(F("\nSending hackery_thermostat_5 val "));
+  Serial.print(zone5Status);
+  Serial.print("...");
+  if (! hackery_thermostat_5.publish(zone5Status)) {
+    Serial.println(F("Failed"));
+  } else {
+    Serial.println(F("OK!"));
+  }  
+  
   // ping the server to keep the mqtt connection alive
   // NOT required if you are publishing once every KEEPALIVE seconds
   /*
@@ -131,8 +171,8 @@ void loop()
   }
   */
 
-  Serial.println("Waiting 5 seconds before next message...");
-  delay(5000);
+  Serial.println("Waiting 10 seconds before next message...");
+  delay(10000);
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.
