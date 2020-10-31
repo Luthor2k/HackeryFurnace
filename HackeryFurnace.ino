@@ -2,17 +2,11 @@
 #include "secrets.h"
 #include <ESP8266WiFi.h>
 
-char ssid[] = "The Hackery";   // your network SSID (name)
-char pass[] = "thematrix";   // your network password
-
-//char ssid[] = "SPAN";   // your network SSID (name)
-//char pass[] = "gigahertz";   // your network password
-
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 WiFiClient  client;
 
-unsigned long myChannelNumber = 639318;
-const char * myWriteAPIKey = "EXNRMWRWPUFN470Z";
+unsigned long myChannelNumber = SECRET_CH_ID;
+const char * myWriteAPIKey = API_KEY;
 
 const int zone1Pin = 4;   //storefront
 const int zone2Pin = 5;   //main workshop
